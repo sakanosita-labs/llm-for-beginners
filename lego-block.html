@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Evolution: Blocks & Towers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #0f172a;
+            /* Slate 900 */
+            color: #f8fafc;
+            /* Slate 50 */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 6px;
+            border: 2px solid #0f172a;
+        }
+
+        /* Chart Container Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        /* Lego Stud Effect for Cards */
+        .lego-card {
+            position: relative;
+            border-top: 4px solid #facc15;
+        }
+
+        .lego-card::before {
+            content: '';
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            width: 40px;
+            height: 10px;
+            background-color: #facc15;
+            border-radius: 4px 4px 0 0;
+        }
+
+        /* Neon Glow Utilities */
+        .glow-yellow {
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.3);
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+        }
+
+        .glow-magenta {
+            box-shadow: 0 0 15px rgba(232, 121, 249, 0.3);
+        }
+
+        .text-neon-yellow {
+            color: #facc15;
+        }
+
+        .text-neon-cyan {
+            color: #22d3ee;
+        }
+
+        .text-neon-magenta {
+            color: #e879f9;
+        }
+
+        .bg-neon-yellow {
+            background-color: #facc15;
+        }
+
+        .bg-neon-cyan {
+            background-color: #22d3ee;
+        }
+
+        .bg-neon-magenta {
+            background-color: #e879f9;
+        }
+    </style>
+    <!-- 
+        NARRATIVE PLAN:
+        1. Intro: The Lego Metaphor.
+        2. Era 1: The "No Block" Era (Stats).
+        3. Era 2: The "Chain" Block (RNN).
+        4. Era 3: The "Joint" Problem (Seq2Seq).
+        5. Era 4: The "Cable" Fix (Attention).
+        6. Era 5: The "Skyscraper" (Transformer).
+        7. Summary: Table.
+    -->
+    <!-- CONFIRMATION: NO SVG USED. NO MERMAID USED. -->
+</head>
+
+<body class="overflow-x-hidden selection:bg-neon-yellow selection:text-black">
+
+    <!-- HERO SECTION -->
+    <header class="min-h-screen flex flex-col justify-center items-center text-center p-6 relative overflow-hidden">
+        <!-- Background Decor (CSS Shapes) -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-blue-900/30 rounded-lg transform rotate-12"></div>
+        <div class="absolute bottom-20 right-10 w-32 h-32 bg-purple-900/30 rounded-lg transform -rotate-6"></div>
+
+        <div class="z-10 max-w-4xl space-y-6">
+            <div
+                class="inline-block bg-neon-yellow text-black font-bold px-4 py-1 rounded-full text-sm mb-4 animate-bounce">
+                中学生でもわかるAI解説
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black leading-tight tracking-tight">
+                AI進化論<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-yellow to-neon-cyan">
+                    ブロックとタワー
+                </span>
+                <br>の歴史
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto">
+                AIの研究は「新しいブロックの発明」と「すごいタワーの設計」の繰り返しだった！<br>
+                最強AIができるまでの5つの時代を見てみよう。
+            </p>
+            <div class="flex justify-center gap-4 mt-8">
+                <!-- CSS Lego Bricks -->
+                <div class="w-12 h-8 bg-neon-magenta rounded-sm shadow-[0_4px_0_#a21caf] relative">
+                    <div class="absolute -top-2 left-1 w-3 h-2 bg-neon-magenta rounded-t-sm"></div>
+                    <div class="absolute -top-2 right-1 w-3 h-2 bg-neon-magenta rounded-t-sm"></div>
+                </div>
+                <div class="w-12 h-8 bg-neon-cyan rounded-sm shadow-[0_4px_0_#0891b2] relative">
+                    <div class="absolute -top-2 left-1 w-3 h-2 bg-neon-cyan rounded-t-sm"></div>
+                    <div class="absolute -top-2 right-1 w-3 h-2 bg-neon-cyan rounded-t-sm"></div>
+                </div>
+                <div class="w-12 h-8 bg-neon-yellow rounded-sm shadow-[0_4px_0_#ca8a04] relative">
+                    <div class="absolute -top-2 left-1 w-3 h-2 bg-neon-yellow rounded-t-sm"></div>
+                    <div class="absolute -top-2 right-1 w-3 h-2 bg-neon-yellow rounded-t-sm"></div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-10 animate-bounce text-slate-500">
+            Scroll to Build ▼
+        </div>
+    </header>
+
+    <!-- ERA 1: STATISTICAL MODELS -->
+    <section class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <div class="flex items-center gap-4">
+                    <span class="text-4xl">📉</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-200">1. 統計モデルの時代</h2>
+                </div>
+                <p class="text-sm text-neon-yellow font-mono tracking-widest">〜2010年頃：ブロックなし</p>
+                <p class="text-slate-300 leading-relaxed text-lg">
+                    まだ「組み立てる」という発想がなかった時代です。研究者たちは、ひたすら**「辞書」や「確率の表」**を作っていました。「Aの次にはBが来やすい」という単純なルールブックです。
+                    タワーは建たず、ただの「ペラペラの紙」のような状態でした。
+                </p>
+                <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-slate-500">
+                    <h4 class="font-bold text-slate-400 text-sm mb-1">ここが弱点！</h4>
+                    <p class="text-slate-200">決まったパターンしか返せないので、応用が全く効きません。</p>
+                </div>
+            </div>
+
+            <div class="chart-container bg-slate-800/50 p-6 rounded-xl border border-slate-700 glow-yellow">
+                <canvas id="chartStats"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ERA 2: RNN/LSTM -->
+    <section class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <!-- Order swap on mobile for better flow -->
+            <div
+                class="order-2 md:order-1 chart-container bg-slate-800/50 p-6 rounded-xl border border-slate-700 glow-magenta">
+                <canvas id="chartRNN"></canvas>
+            </div>
+
+            <div class="order-1 md:order-2 space-y-6">
+                <div class="flex items-center gap-4">
+                    <span class="text-4xl">🔗</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-200">2. RNN・LSTMの時代</h2>
+                </div>
+                <p class="text-sm text-neon-magenta font-mono tracking-widest">2010年代前半：鎖（くさり）のブロック</p>
+                <p class="text-slate-300 leading-relaxed text-lg">
+                    ついに「ブロック」が発明されました！ その名は**RNN（鎖のブロック）**。
+                    横にカチッと繋げていくことができ、前の情報を次へと渡すことができます。これで「昨日の」「天気が」…といった文章の流れを作れるようになりました。
+                </p>
+                <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-neon-magenta">
+                    <h4 class="font-bold text-neon-magenta text-sm mb-1">ここが弱点！</h4>
+                    <p class="text-slate-200">横に長くなると、最初の方の情報を忘れてしまいます（伝言ゲームの限界）。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ERA 3: SEQ2SEQ -->
+    <section class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <span class="text-4xl block mb-4">🔄</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-200 mb-2">3. Seq2Seqの時代</h2>
+            <p class="text-sm text-neon-cyan font-mono tracking-widest mb-6">2014年頃：巨大ブロックの合体</p>
+            <p class="text-slate-300 text-lg leading-relaxed">
+                研究者は考えました。「読み込み専用ブロック（エンコーダー）」と「書き出し専用ブロック（デコーダー）」を作って合体させれば、翻訳ができる！
+                しかし、そこには**「ボトルネック」**という大きな壁がありました。
+            </p>
+        </div>
+
+        <!-- CSS Diagram (No Mermaid/SVG) -->
+        <div class="flex flex-col items-center justify-center gap-4 max-w-4xl mx-auto">
+
+            <div class="flex flex-col md:flex-row items-stretch justify-center w-full gap-2">
+
+                <!-- Encoder Block -->
+                <div
+                    class="flex-1 bg-slate-800 border-2 border-neon-cyan rounded-lg p-6 flex flex-col items-center justify-center relative min-h-[120px]">
+                    <h3 class="font-bold text-neon-cyan text-xl mb-2">エンコーダー</h3>
+                    <p class="text-slate-400 text-sm text-center">長い文章を読む</p>
+                    <!-- Studs -->
+                    <div
+                        class="absolute -top-3 left-4 w-6 h-3 bg-slate-800 border-2 border-neon-cyan border-b-0 rounded-t-sm">
+                    </div>
+                </div>
+
+                <!-- Bottleneck Connection -->
+                <div class="flex flex-col items-center justify-center p-2 relative">
+                    <div class="h-1 w-16 md:w-24 bg-gradient-to-r from-neon-cyan to-neon-magenta"></div>
+                    <div
+                        class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded absolute -top-3 whitespace-nowrap animate-pulse">
+                        ボトルネック！
+                    </div>
+                    <div class="text-[10px] text-slate-500 mt-2">情報がこぼれる...</div>
+                </div>
+
+                <!-- Decoder Block -->
+                <div
+                    class="flex-1 bg-slate-800 border-2 border-neon-magenta rounded-lg p-6 flex flex-col items-center justify-center relative min-h-[120px]">
+                    <h3 class="font-bold text-neon-magenta text-xl mb-2">デコーダー</h3>
+                    <p class="text-slate-400 text-sm text-center">違う言葉で書く</p>
+                    <!-- Studs -->
+                    <div
+                        class="absolute -top-3 right-4 w-6 h-3 bg-slate-800 border-2 border-neon-magenta border-b-0 rounded-t-sm">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 bg-slate-800 p-4 rounded-lg w-full max-w-lg text-center">
+                <p class="text-slate-300 text-sm">
+                    どんな長編小説も、真ん中で**「たった一つの小さな箱」**に要約しないといけません。<br>
+                    これでは無理があります！
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ERA 4: ATTENTION -->
+    <section class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <div class="flex items-center gap-4">
+                    <span class="text-4xl">🔍</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-200">4. Attentionの時代</h2>
+                </div>
+                <p class="text-sm text-neon-yellow font-mono tracking-widest">2015年頃：魔法のルーペ</p>
+                <p class="text-slate-300 leading-relaxed text-lg">
+                    「無理に要約するのはやめよう！」<br>
+                    研究者は**Attention（魔法のルーペ）**を発明しました。これは、書き出す時に、読み込んだ過去のデータを**直接カンニング（覗き見）**できる道具です。
+                    「彼」と書く瞬間に、遠くにある「田中さん」という情報を直接参照できるようになりました。
+                </p>
+                <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-neon-yellow">
+                    <h4 class="font-bold text-neon-yellow text-sm mb-1">進化ポイント</h4>
+                    <p class="text-slate-200">ブロック同士を繋ぐ「通信ケーブル」が配備された状態。これで長い文章もバッチリ！</p>
+                </div>
+            </div>
+
+            <div class="chart-container bg-slate-800/50 p-6 rounded-xl border border-slate-700 glow-yellow">
+                <!-- Heatmap visualization via Bubble Chart -->
+                <div class="text-center text-xs text-slate-400 mb-2">入力単語と出力単語の「結びつき」の強さ</div>
+                <canvas id="chartAttention"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ERA 5: TRANSFORMER -->
+    <section class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800 bg-gradient-to-b from-slate-900 to-black">
+        <div class="text-center max-w-4xl mx-auto mb-16">
+            <span class="text-6xl block mb-6 animate-pulse">🏗️</span>
+            <h2 class="text-4xl md:text-6xl font-black text-white mb-4">
+                5. Transformer<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan via-white to-neon-magenta">
+                    最強の積層ブロック
+                </span>
+            </h2>
+            <p class="text-sm text-slate-400 font-mono tracking-widest mb-8">2017年〜現在：宇宙を目指すタワー</p>
+            <p class="text-xl text-slate-300 leading-relaxed">
+                「鎖（RNN）なんていらない。Attentionだけあればいい！」<br>
+                2017年、研究者は過去のブロックを捨て、積み上げ専用の**「万能ブロック（Transformer）」**を発明しました。<br>
+                このブロックは四角くて安定しており、**一気に（並列に）**処理できます。だから、何百、何千と高く積み上げることができたのです。
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+            <!-- Visualizing the Tower Height/Capacity -->
+            <div class="chart-container bg-slate-800/50 p-6 rounded-xl border border-slate-700 glow-cyan">
+                <canvas id="chartTransformer"></canvas>
+            </div>
+
+            <div class="space-y-4">
+                <div class="lego-card bg-slate-800 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-white mb-2">🧱 ブロックの中身は？</h3>
+                    <p class="text-slate-400">
+                        「通信機能（Attention）」と「考える脳（FFN）」が最初からセットになった、オールインワン・パッケージです。
+                    </p>
+                </div>
+                <div class="lego-card bg-slate-800 p-6 rounded-lg shadow-lg border-t-4 border-neon-cyan">
+                    <h3 class="text-xl font-bold text-white mb-2">🏢 建ったタワーは？</h3>
+                    <p class="text-slate-400">
+                        **LLM（大規模言語モデル）**という名の超高層ビルです。頂上からは翻訳も、作文も、プログラミングも全て見渡せます。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SUMMARY TABLE -->
+    <section class="py-20 px-6 max-w-5xl mx-auto">
+        <div class="bg-slate-800 rounded-2xl p-8 md:p-12 shadow-2xl border border-slate-700">
+            <h2 class="text-3xl font-bold text-center text-white mb-10">まとめ：ブロック進化の通信簿</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-slate-300">
+                    <thead>
+                        <tr class="text-neon-yellow border-b-2 border-slate-600 text-lg">
+                            <th class="p-4 whitespace-nowrap">時代</th>
+                            <th class="p-4 whitespace-nowrap">ブロックの種類</th>
+                            <th class="p-4 whitespace-nowrap">できたタワー（モデル）</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700">
+                        <tr>
+                            <td class="p-4 font-mono text-sm">1. 統計モデル</td>
+                            <td class="p-4">なし（辞書のみ）</td>
+                            <td class="p-4 text-slate-500">（建たず）ペラペラの表</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-mono text-sm">2. RNN / LSTM</td>
+                            <td class="p-4">⛓️ 鎖のブロック</td>
+                            <td class="p-4">横に長い列（バケツリレー）</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-mono text-sm">3. Seq2Seq</td>
+                            <td class="p-4">📦 巨大パーツ合体</td>
+                            <td class="p-4">連結タワー（つなぎ目が弱い）</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-mono text-sm">4. Attention</td>
+                            <td class="p-4">🔌 通信ケーブル付</td>
+                            <td class="p-4">カンニング可能なタワー</td>
+                        </tr>
+                        <tr class="bg-slate-700/50">
+                            <td class="p-4 font-mono text-sm font-bold text-neon-cyan">5. Transformer</td>
+                            <td class="p-4 font-bold text-white">🏗️ 万能積層ブロック</td>
+                            <td class="p-4 font-bold text-white">宇宙まで届く超高層ビル (LLM)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-8 text-center">
+                <p class="text-slate-400">Next: この最強ブロックの中身「Attention」をもっと詳しく！</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-8 text-slate-600 text-sm">
+        <p>Created for Note.com Series | Middle School AI Guide</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // --- UTILS ---
+
+        // Label Wrapping (Mandatory)
+        function splitLabel(label, maxLength = 16) {
+            if (label.length <= maxLength) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= maxLength) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // Shared Tooltip Config (Mandatory)
+        const commonTooltip = {
+            callbacks: {
+                title: function (tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels ? item.chart.data.labels[item.dataIndex] : '';
+                    if (!label && item.raw && item.raw.label) label = item.raw.label; // For Bubble
+
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            },
+            titleFont: { family: "'Noto Sans JP', sans-serif" },
+            bodyFont: { family: "'Noto Sans JP', sans-serif" },
+            padding: 10,
+            cornerRadius: 4,
+            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+            borderColor: '#facc15',
+            borderWidth: 1
+        };
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#cbd5e1', font: { family: "'Noto Sans JP', sans-serif" } }
+                },
+                tooltip: commonTooltip
+            },
+            scales: {
+                x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+            }
+        };
+
+        // --- CHART 1: STATS (Horizontal Bar) ---
+        const ctxStats = document.getElementById('chartStats').getContext('2d');
+        new Chart(ctxStats, {
+            type: 'bar',
+            data: {
+                labels: ['ご飯 (高確率)', '学校 (中確率)', '本 (低確率)', '宇宙 (超低確率)'].map(l => splitLabel(l)),
+                datasets: [{
+                    label: '「私は」の次に来る確率 (%)',
+                    data: [65, 25, 8, 2],
+                    backgroundColor: [
+                        '#facc15',
+                        'rgba(250, 204, 21, 0.5)',
+                        'rgba(250, 204, 21, 0.3)',
+                        'rgba(250, 204, 21, 0.1)'
+                    ],
+                    borderColor: '#facc15',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonOptions,
+                indexAxis: 'y'
+            }
+        });
+
+        // --- CHART 2: RNN MEMORY (Line) ---
+        const ctxRNN = document.getElementById('chartRNN').getContext('2d');
+        new Chart(ctxRNN, {
+            type: 'line',
+            data: {
+                labels: ['1語前', '5語前', '10語前', '20語前', '50語前'].map(l => splitLabel(l)),
+                datasets: [
+                    {
+                        label: 'RNN (すぐ忘れる)',
+                        data: [100, 40, 10, 0, 0],
+                        borderColor: '#e879f9', // Magenta
+                        backgroundColor: 'rgba(232, 121, 249, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'LSTM (少しマシ)',
+                        data: [100, 85, 70, 50, 20],
+                        borderColor: '#22d3ee', // Cyan
+                        backgroundColor: 'rgba(34, 211, 238, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    ...commonOptions.scales,
+                    y: { ...commonOptions.scales.y, title: { display: true, text: '情報の鮮明さ (%)', color: '#94a3b8' } },
+                    x: { ...commonOptions.scales.x, title: { display: true, text: '距離 (前の言葉)', color: '#94a3b8' } }
+                }
+            }
+        });
+
+        // --- CHART 4: ATTENTION MAP (Bubble) ---
+        const ctxAttn = document.getElementById('chartAttention').getContext('2d');
+        // Visualizing "I ate an apple" translation attention
+        // Input (Y): 1:私, 2:食べた, 3:リンゴ
+        // Output (X): 1:I, 2:ate, 3:an, 4:apple
+        const bubbleData = [
+            { x: 1, y: 1, r: 20, label: "I ⇔ 私 (強い!)" },
+            { x: 2, y: 2, r: 25, label: "ate ⇔ 食べた (超強い!)" },
+            { x: 3, y: 3, r: 5, label: "an ⇔ リンゴ (弱い)" },
+            { x: 4, y: 3, r: 25, label: "apple ⇔ リンゴ (超強い!)" },
+            // Noise/Weak connections
+            { x: 2, y: 1, r: 2, label: "ate ⇔ 私" },
+            { x: 4, y: 1, r: 2, label: "apple ⇔ 私" }
+        ];
+
+        new Chart(ctxAttn, {
+            type: 'bubble',
+            data: {
+                datasets: [{
+                    label: '注目の強さ (円の大きさ)',
+                    data: bubbleData,
+                    backgroundColor: (ctx) => ctx.raw?.r > 15 ? '#facc15' : 'rgba(250, 204, 21, 0.2)',
+                    borderColor: '#facc15'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: {
+                        min: 0, max: 4,
+                        ticks: {
+                            callback: v => ['', '私 (入力)', '食べた (入力)', 'リンゴ (入力)'][v],
+                            color: '#cbd5e1', font: { weight: 'bold' }
+                        },
+                        grid: { color: '#334155' }
+                    },
+                    x: {
+                        min: 0, max: 5,
+                        ticks: {
+                            callback: v => ['', 'I (出)', 'ate (出)', 'an (出)', 'apple (出)'][v],
+                            color: '#cbd5e1', font: { weight: 'bold' }
+                        },
+                        grid: { color: '#334155' }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => ctx.raw.label
+                        }
+                    },
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // --- CHART 5: TRANSFORMER GROWTH (Bar) ---
+        const ctxTrans = document.getElementById('chartTransformer').getContext('2d');
+        new Chart(ctxTrans, {
+            type: 'bar',
+            data: {
+                labels: ['RNN (旧)', 'Transformer (新)'].map(l => splitLabel(l)),
+                datasets: [
+                    {
+                        label: '積み上げ可能な高さ (層の深さ)',
+                        data: [10, 100], // Illustrative
+                        backgroundColor: '#22d3ee',
+                    },
+                    {
+                        label: '並列処理能力 (スピード)',
+                        data: [5, 95], // Illustrative
+                        backgroundColor: '#e879f9',
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: { display: false }, // Focus on relative comparison
+                    x: { ticks: { color: '#cbd5e1', font: { size: 14, weight: 'bold' } } }
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
